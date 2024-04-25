@@ -1,5 +1,10 @@
 #!/bin/bash
 
+cd "$(dirname "$0")" || exit
+
+LOG_FILE="/home/wecher/02-disco/01-projects/guarani-check-finales/log-file.log"
+timestamp=$(date +"%Y-%m-%d, %H:%M:%S")
+
 # Cargo datos de login
 source .env
 
@@ -15,11 +20,11 @@ curl -s 'https://g3w.uns.edu.ar/guarani3w/actuacion_provisoria_examen' \
 | grep "Sin resultado"
 
 if [ $? -eq 0 ]; then
-    MSG="HAY NOTA DE ARQUI"
-    echo "${MSG}"
-    telegram "${MSG}" > /dev/null
+    MSG="${timestamp},HAY NOTA DE ARQUI"
+    telegram "${MSG}" >> "${LOG_FILE}"
 else
-    MSG="Nota Arqui: Sin resultado"
-    echo "${MSG}"
-    telegram "${MSG}" > /dev/null
+    MSG="${timestamp},Nota Arqui: Sin resultado"
 fi
+
+echo "${MSG}"
+echo "${MSG}" >> "${LOG_FILE}"
